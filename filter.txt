@@ -58,3 +58,72 @@ def filter_dataset():
 
 if __name__ == '__main__':
     app.run()
+
+
+
+
+##################### HTML ###########################
+
+
+<select id="dropdown" class="dropdown">
+  <option value="">Select a node type</option>
+  <option value="Type 1">Type 1</option>
+  <option value="Type 2">Type 2</option>
+  <option value="Type 3">Type 3</option>
+  <option value="Type 4">Type 4</option>
+</select>
+
+<button id="submitBtn">Submit</button>
+
+<script>
+  function filterCSV() {
+    var selectedValue = document.getElementById('dropdown').value;
+
+    // Fetch the CSV file from a specific location
+    fetch('path/to/your/csv/file.csv')
+      .then(response => response.text())
+      .then(csvData => {
+        // Split the CSV data into rows
+        var rows = csvData.split('\n');
+
+        // Split the header row to get the column names
+        var headers = rows[0].split(',');
+
+        // Find the index of the 'Node Type' column
+        var typeColumnIndex = headers.indexOf('Node Type');
+
+        // Filter the rows based on the selected value
+        var filteredRows = rows.filter(function(row, index) {
+          // Skip the header row
+          if (index === 0) {
+            return true;
+          }
+
+          // Split the row into columns
+          var columns = row.split(',');
+
+          // Compare the 'Node Type' column value with the selected value
+          return columns[typeColumnIndex].trim() === selectedValue;
+        });
+
+        // Join the filtered rows back into a CSV string
+        var filteredCSV = filteredRows.join('\n');
+
+        // Create a download link for the filtered CSV
+        var link = document.createElement('a');
+        link.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(filteredCSV);
+        link.download = 'filtered_data.csv';
+        link.style.display = 'none';
+        document.body.appendChild(link);
+
+        // Automatically trigger the download
+        link.click();
+
+        // Clean up the temporary link element
+        document.body.removeChild(link);
+      })
+      .catch(error => console.error('Error fetching CSV:', error));
+  }
+
+  document.getElementById('submitBtn').addEventListener('click', filterCSV);
+</script>
