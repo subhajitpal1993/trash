@@ -127,3 +127,12 @@ if __name__ == '__main__':
 
   document.getElementById('submitBtn').addEventListener('click', filterCSV);
 </script>
+ #####################################################
+ 
+ const filteredData = csvData.filter((data) => {
+        // Replace `1` with the desired column index to filter (assuming column indexes start from 0)
+        const columnValue = data[columnIndex];
+        const filterValue = 'desired-value'; // Replace with the value you want to filter
+
+        return columnValue === filterValue;
+      });
