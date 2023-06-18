@@ -119,6 +119,43 @@ if __name__ == '__main__':
         // Automatically trigger the download
         link.click();
 
+
+
+
+
+$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$44
+
+document.getElementById('demo').addEventListener('change', function() {
+  const fileContent = var; // Value of the `var` variable
+  const fileName = 'output.txt'; // Name of the output text file
+
+  if (window.showSaveFilePicker && window.WritableStream) {
+    // Check if the File System API is supported
+
+    const saveFile = async () => {
+      const handle = await window.showSaveFilePicker({
+        suggestedName: fileName,
+        types: [
+          {
+            description: 'Text Files',
+            accept: {
+              'text/plain': ['.txt'],
+            },
+          },
+        ],
+      });
+
+      const writable = await handle.createWritable();
+      await writable.write(fileContent);
+      await writable.close();
+    };
+
+    saveFile();
+  } else {
+    console.log('File System API is not supported.');
+  }
+});
+
         // Clean up the temporary link element
         document.body.removeChild(link);
       })
