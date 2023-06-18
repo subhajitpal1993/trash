@@ -29,8 +29,9 @@
 
 ### python 
 
-from flask import Flask, request, jsonify
+from flask import Flask, request, send_file
 import pandas as pd
+import io
 
 app = Flask(__name__)
 
@@ -44,10 +45,16 @@ def filter_dataset():
     # Filter the dataset based on the selected value
     filtered_dataset = dataset[dataset['column_name'] == selected_value]  # Replace 'column_name' with the desired column name
 
-    # Convert the filtered dataset to a list of dictionaries
-    filtered_data = filtered_dataset.to_dict(orient='records')
+    # Convert the filtered dataset to CSV
+    csv_data = filtered_dataset.to_csv(index=False)
 
-    return jsonify({'filteredData': filtered_data})
+    # Create a file-like object from the CSV data
+    csv_io = io.StringIO(csv_data)
+
+    # Create a response with the CSV file
+    response = send_file(csv_io, mimetype='text/csv', as_attachment=True, attachment_filename='filtered_data.csv')
+
+    return response
 
 if __name__ == '__main__':
     app.run()
