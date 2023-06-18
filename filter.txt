@@ -1,0 +1,53 @@
+<select id="dropdown" class="dropdown">
+  <option value="option1">Option 1</option>
+  <option value="option2">Option 2</option>
+  <option value="option3">Option 3</option>
+</select>
+
+<button id="submitBtn">Submit</button>
+
+<script>
+  document.getElementById("submitBtn").addEventListener("click", function() {
+    var selectedValue = document.getElementById("dropdown").value;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "/filter", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        var response = JSON.parse(xhr.responseText);
+        console.log(response.filteredData);
+      }
+    };
+    var data = JSON.stringify({ selectedValue: selectedValue });
+    xhr.send(data);
+  });
+</script>
+
+
+
+
+### python 
+
+from flask import Flask, request, jsonify
+import pandas as pd
+
+app = Flask(__name__)
+
+# Load the CSV dataset
+dataset = pd.read_csv('your_dataset.csv')  # Replace 'your_dataset.csv' with the actual path and filename
+
+@app.route('/filter', methods=['POST'])
+def filter_dataset():
+    selected_value = request.json['selectedValue']
+
+    # Filter the dataset based on the selected value
+    filtered_dataset = dataset[dataset['column_name'] == selected_value]  # Replace 'column_name' with the desired column name
+
+    # Convert the filtered dataset to a list of dictionaries
+    filtered_data = filtered_dataset.to_dict(orient='records')
+
+    return jsonify({'filteredData': filtered_data})
+
+if __name__ == '__main__':
+    app.run()
